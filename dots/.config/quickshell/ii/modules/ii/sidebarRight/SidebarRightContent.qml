@@ -157,7 +157,7 @@ Item {
 
     ToggleDialog {
         shownPropertyString: "showIdleInhibitorDialog"
-        dialog: idleInhibitorDialog {}
+        dialog: IdleInhibitorDialog {}
     }
 
     component ToggleDialog: Loader {
