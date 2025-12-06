@@ -68,12 +68,11 @@ Singleton {
         repeat: true
         running: false
         onTriggered: {
-            root.timeRemaining -= 1
+            root.timeRemaining = Math.max(0, root.timeRemaining - 1)
             if (root.timeRemaining <= 0) {
                 root.toggleInhibit(false)
             }
         }
-        Persistent.states.idle.inhibit = root.inhibit;
     }
 
     IdleInhibitor {
