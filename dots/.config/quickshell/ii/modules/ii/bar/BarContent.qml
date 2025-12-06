@@ -88,6 +88,15 @@ Item { // Bar content region
                 Layout.leftMargin: Appearance.rounding.screenRounding
                 colBackground: barLeftSideMouseArea.hovered ? Appearance.colors.colLayer1Hover : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
             }
+
+            Loader {
+                Layout.leftMargin: 4
+                active: Config.options.bar.weather.enable
+
+                sourceComponent: BarGroup {
+                    WeatherBar {}
+                }
+            }
         }
     }
 
@@ -321,15 +330,6 @@ Item { // Bar content region
                 Layout.fillHeight: true
             }
 
-            // Weather
-            Loader {
-                Layout.leftMargin: 4
-                active: Config.options.bar.weather.enable
-
-                sourceComponent: BarGroup {
-                    WeatherBar {}
-                }
-            }
         }
     }
 }
