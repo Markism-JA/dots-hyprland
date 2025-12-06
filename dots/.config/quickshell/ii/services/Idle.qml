@@ -75,24 +75,17 @@ Singleton {
         }
     }
 
+    ShellWindow {
+        id: inhibitSurface
+        visible: true
+        width: 1
+        height: 1
+        color: "transparent"
+    }
+
     IdleInhibitor {
         id: idleInhibitor
-        window: PanelWindow {
-            // Inhibitor requires a "visible" surface
-            // Actually not lol
-            implicitWidth: 0
-            implicitHeight: 0
-            color: "transparent"
-            // Just in case...
-            anchors {
-                right: true
-                bottom: true
-            }
-            // Make it not interactable
-            mask: Region {
-                item: null
-            }
-        }
+        window: inhibitSurface
     }
 
     Process {
