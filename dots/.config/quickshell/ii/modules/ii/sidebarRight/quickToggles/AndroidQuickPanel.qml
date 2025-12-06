@@ -12,6 +12,7 @@ AbstractQuickPanel {
     id: root
     property bool editMode: false
     Layout.fillWidth: true
+    signal openIdleInhibitorDialog()
 
     // Sizes
     implicitHeight: (editMode ? contentItem.implicitHeight : usedRows.implicitHeight) + root.padding * 2
@@ -106,6 +107,7 @@ AbstractQuickPanel {
                             onOpenBluetoothDialog: root.openBluetoothDialog()
                             onOpenNightLightDialog: root.openNightLightDialog()
                             onOpenWifiDialog: root.openWifiDialog()
+                            onOpenIdleInhibitorDialog: root.openIdleInhibitorDialog()
                         }
                     }
                 }

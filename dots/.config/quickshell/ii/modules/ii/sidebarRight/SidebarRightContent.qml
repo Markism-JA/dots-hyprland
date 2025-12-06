@@ -16,6 +16,7 @@ import qs.modules.ii.sidebarRight.bluetoothDevices
 import qs.modules.ii.sidebarRight.nightLight
 import qs.modules.ii.sidebarRight.volumeMixer
 import qs.modules.ii.sidebarRight.wifiNetworks
+import qs.modules.ii.sidebarRight.idleInhibitor
 
 Item {
     id: root
@@ -27,6 +28,7 @@ Item {
     property bool showBluetoothDialog: false
     property bool showNightLightDialog: false
     property bool showWifiDialog: false
+    property bool showIdleInhibitorDialog: false
     property bool editMode: false
 
     Connections {
@@ -153,6 +155,11 @@ Item {
         }
     }
 
+    ToggleDialog {
+        shownPropertyString: "showIdleInhibitorDialog"
+        dialog: idleInhibitorDialog {}
+    }
+
     component ToggleDialog: Loader {
         id: toggleDialogLoader
         required property string shownPropertyString
@@ -203,6 +210,9 @@ Item {
             }
             function onOpenWifiDialog() {
                 root.showWifiDialog = true;
+            }
+            function onOpenIdleInhibitorDialog() {
+                root.showIdleInhibitorDialog = true;
             }
         }
     }

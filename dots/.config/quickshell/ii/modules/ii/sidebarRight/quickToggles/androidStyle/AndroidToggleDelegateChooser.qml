@@ -19,6 +19,7 @@ DelegateChooser {
     signal openBluetoothDialog()
     signal openNightLightDialog()
     signal openWifiDialog()
+    signal openIdleInhibitorDialog()
 
     role: "type"
 
@@ -146,6 +147,9 @@ DelegateChooser {
         baseCellHeight: root.baseCellHeight
         cellSpacing: root.spacing
         cellSize: modelData.size
+        onOpenMenu: {
+            root.openIdleInhibitorDialog()
+        }
     } }
 
     DelegateChoice { roleValue: "mic"; AndroidMicToggle {
@@ -260,4 +264,6 @@ DelegateChooser {
         cellSpacing: root.spacing
         cellSize: modelData.size
     } }
+
+    // this is where the binding for the menu is 
 }
