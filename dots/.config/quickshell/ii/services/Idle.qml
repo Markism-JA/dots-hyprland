@@ -3,20 +3,19 @@ import qs.modules.common
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Io
 
-/**
- * A nice wrapper for date and time strings.
- */
 Singleton {
     id: root
 
-    property alias mode: Persistent.states.idle.mode
-    property alias keepScreenOn: Persistent.states.idle.keepScreenOn
-    property alias durationSeconds: Persistent.states.idle.durationSeconds
+    // ERROR FIXED: Removed the invalid deep aliases.
+    // We will read these directly from Persistent in the functions below.
 
+    // Internal State
     property bool inhibit: false
     property int timeRemaining: 0
 
+    // Enums
     enum IdleMode {
         Timer,
         Indefinite
@@ -26,8 +25,10 @@ Singleton {
         target: Persistent
         function onReadyChanged() {
             if (!Persistent.isNewHyprlandInstance) {
+                // Restore the state from JSON
                 root.toggleInhibit(Persistent.states.idle.inhibit);
             } else {
+                // Reset to false on fresh boot
                 Persistent.states.idle.inhibit = false;
                 root.inhibit = false;
             }
@@ -38,16 +39,20 @@ Singleton {
         if (enable === undefined) enable = !inhibit
 
         inhibit = enable
-
+        
+        // Sync the state back to JSON
         Persistent.states.idle.inhibit = enable
 
         if (inhibit) {
-            if (mode === root.IdleMode.Timer) {
-                timeRemaining = durationSeconds
+            // FIX: Access Persistent directly here instead of using aliases
+            // 0 = Timer Mode
+            if (Persistent.states.idle.mode === root.IdleMode.Timer) {
+                timeRemaining = Persistent.states.idle.durationSeconds
                 countdownTimer.start()
             }
 
-            if (keepScreenOn) {
+            // FIX: Check Persistent directly for screen preference
+            if (Persistent.states.idle.keepScreenOn) {
                 idleInhibitor.enabled = true
                 systemdInhibitor.running = false
             } else {
@@ -64,28 +69,32 @@ Singleton {
 
     Timer {
         id: countdownTimer
-        interval: 1000
+        interval: 1000 
         repeat: true
         running: false
         onTriggered: {
-            root.timeRemaining = Math.max(0, root.timeRemaining - 1)
+            root.timeRemaining -= 1
             if (root.timeRemaining <= 0) {
-                root.toggleInhibit(false)
+                root.toggleInhibit(false) 
             }
         }
     }
 
-    ShellWindow {
-        id: inhibitSurface
-        visible: true
-        width: 1
-        height: 1
-        color: "transparent"
-    }
-
     IdleInhibitor {
         id: idleInhibitor
-        window: inhibitSurface
+        enabled: false
+        window: PanelWindow {
+            implicitWidth: 0
+            implicitHeight: 0
+            color: "transparent"
+            anchors {
+                right: true
+                bottom: true
+            }
+            mask: Region {
+                item: null
+            }
+        }
     }
 
     Process {
@@ -93,7 +102,10 @@ Singleton {
         command: ["systemd-inhibit", "--what=sleep", "--who=Quickshell", "--why=UserRequest", "sleep", "infinity"]
         running: false
         onExited: {
-            if (root.inhibit && !root.keepScreenOn) root.toggleInhibit(false)
+            // FIX: Check Persistent directly here
+            if (root.inhibit && !Persistent.states.idle.keepScreenOn) {
+                root.toggleInhibit(false)
+            }
         }
     }
 }
