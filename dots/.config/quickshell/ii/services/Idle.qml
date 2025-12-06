@@ -10,25 +10,68 @@ import Quickshell.Wayland
 Singleton {
     id: root
 
-    property alias inhibit: idleInhibitor.enabled
-    inhibit: false
+    property alias mode: Persistent.states.idle.mode
+    property alias keepScreenOn: Persistent.states.idle.keepScreenOn
+    property alias durationSeconds: Persistent.states.idle.durationSeconds
+
+    property bool inhibit: false
+    property int timeRemaining: 0
+
+    enum IdleMode {
+        Timer,
+        Indefinite
+    }
 
     Connections {
         target: Persistent
         function onReadyChanged() {
             if (!Persistent.isNewHyprlandInstance) {
-                root.inhibit = Persistent.states.idle.inhibit;
+                root.toggleInhibit(Persistent.states.idle.inhibit);
             } else {
-                Persistent.states.idle.inhibit = root.inhibit;
+                Persistent.states.idle.inhibit = false;
+                root.inhibit = false;
             }
         }
     }
 
-    function toggleInhibit(active = null) {
-        if (active !== null) {
-            root.inhibit = active;
+    function toggleInhibit(enable) {
+        if (enable === undefined) enable = !inhibit
+
+        inhibit = enable
+
+        Persistent.states.idle.inhibit = enable
+
+        if (inhibit) {
+            if (mode === root.IdleMode.Timer) {
+                timeRemaining = durationSeconds
+                countdownTimer.start()
+            }
+
+            if (keepScreenOn) {
+                idleInhibitor.enabled = true
+                systemdInhibitor.running = false
+            } else {
+                idleInhibitor.enabled = false
+                systemdInhibitor.running = true
+            }
         } else {
-            root.inhibit = !root.inhibit;
+            countdownTimer.stop()
+            idleInhibitor.enabled = false
+            systemdInhibitor.running = false
+            timeRemaining = 0
+        }
+    }
+
+    Timer {
+        id: countdownTimer
+        interval: 1000
+        repeat: true
+        running: false
+        onTriggered: {
+            root.timeRemaining -= 1
+            if (root.timeRemaining <= 0) {
+                root.toggleInhibit(false)
+            }
         }
         Persistent.states.idle.inhibit = root.inhibit;
     }
@@ -50,6 +93,15 @@ Singleton {
             mask: Region {
                 item: null
             }
+        }
+    }
+
+    Process {
+        id: systemdInhibitor
+        command: ["systemd-inhibit", "--what=sleep", "--who=Quickshell", "--why=UserRequest", "sleep", "infinity"]
+        running: false
+        onExited: {
+            if (root.inhibit && !root.keepScreenOn) root.toggleInhibit(false)
         }
     }
 }
