@@ -81,6 +81,9 @@ Singleton {
 
             property JsonObject idle: JsonObject {
                 property bool inhibit: false
+                property int mode: 1 // 0=Timer, 1=Infinite
+                property int durationSeconds: 3600 // 1 hour
+                property bool keepScreenOn: true // false is systemd inhibit
             }
 
             property JsonObject overlay: JsonObject {
