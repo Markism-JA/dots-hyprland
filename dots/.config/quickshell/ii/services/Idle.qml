@@ -8,9 +8,6 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    // ERROR FIXED: Removed the invalid deep aliases.
-    // We will read these directly from Persistent in the functions below.
-
     // Internal State
     property bool inhibit: false
     property int timeRemaining: 0
@@ -39,25 +36,25 @@ Singleton {
         if (enable === undefined) enable = !inhibit
 
         inhibit = enable
-        
-        // Sync the state back to JSON
+
         Persistent.states.idle.inhibit = enable
 
         if (inhibit) {
-            // FIX: Access Persistent directly here instead of using aliases
-            // 0 = Timer Mode
-            if (Persistent.states.idle.mode === root.IdleMode.Timer) {
+            if (Persistent.states.idle.mode === 0) {
                 timeRemaining = Persistent.states.idle.durationSeconds
                 countdownTimer.start()
             }
 
-            // FIX: Check Persistent directly for screen preference
             if (Persistent.states.idle.keepScreenOn) {
                 idleInhibitor.enabled = true
                 systemdInhibitor.running = false
+
+                console.log("idleInhibitor:", idleInhibitor.enabled, "| systemdInhibitor:", systemdInhibitor.running)
             } else {
                 idleInhibitor.enabled = false
                 systemdInhibitor.running = true
+
+                console.log("idleInhibitor:", idleInhibitor.enabled, "| systemdInhibitor:", systemdInhibitor.running)
             }
         } else {
             countdownTimer.stop()
@@ -102,7 +99,6 @@ Singleton {
         command: ["systemd-inhibit", "--what=sleep", "--who=Quickshell", "--why=UserRequest", "sleep", "infinity"]
         running: false
         onExited: {
-            // FIX: Check Persistent directly here
             if (root.inhibit && !Persistent.states.idle.keepScreenOn) {
                 root.toggleInhibit(false)
             }
