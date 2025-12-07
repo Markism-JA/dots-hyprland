@@ -8,24 +8,15 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    // Internal State
     property bool inhibit: false
     property int timeRemaining: 0
-
-    // Enums
-    enum IdleMode {
-        Timer,
-        Indefinite
-    }
 
     Connections {
         target: Persistent
         function onReadyChanged() {
             if (!Persistent.isNewHyprlandInstance) {
-                // Restore the state from JSON
                 root.toggleInhibit(Persistent.states.idle.inhibit);
             } else {
-                // Reset to false on fresh boot
                 Persistent.states.idle.inhibit = false;
                 root.inhibit = false;
             }
@@ -66,13 +57,13 @@ Singleton {
 
     Timer {
         id: countdownTimer
-        interval: 1000 
+        interval: 1000
         repeat: true
         running: false
         onTriggered: {
             root.timeRemaining -= 1
             if (root.timeRemaining <= 0) {
-                root.toggleInhibit(false) 
+                root.toggleInhibit(false)
             }
         }
     }
