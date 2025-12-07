@@ -45,7 +45,9 @@ Scope {
             WlrLayershell.namespace: "quickshell:session"
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-            color: ColorUtils.transparentize(Appearance.m3colors.m3background, Appearance.m3colors.darkmode ? 0.05 : 0.12)
+            // This is a big surface so we needa carefully choose the transparency,
+            // or we'll get a large scary rgb blob
+            color: ColorUtils.transparentize(Appearance.m3colors.m3background, Appearance.m3colors.darkmode ? 0.96 : 0.88)
 
             anchors {
                 top: true
