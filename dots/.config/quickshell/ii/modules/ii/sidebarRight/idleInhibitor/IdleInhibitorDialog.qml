@@ -21,6 +21,7 @@ WindowDialog {
         spacing: 16
         anchors.margins: 20
 
+        // main switch
         RowLayout {
             Layout.fillWidth: true
             spacing: 12
@@ -28,7 +29,7 @@ WindowDialog {
             ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 0
-                
+
                 StyledText {
                     text: Translation.tr("Inhibit Idle")
                     font.pixelSize: Appearance.font.pixelSize.large
@@ -49,15 +50,14 @@ WindowDialog {
             }
         }
 
-        // --- 2. Settings Card ---
+        // Settings Card
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: settingsColumn.implicitHeight + 32
-            
-            // Inset Background
+
             color: Qt.rgba(0, 0, 0, 0.25) 
             radius: 16
-            
+
             // Dim if disabled
             opacity: inhibitSwitch.checked ? 1.0 : 0.5
             enabled: inhibitSwitch.checked
@@ -78,18 +78,18 @@ WindowDialog {
                         Layout.alignment: Qt.AlignVCenter
                     }
                     Item { Layout.fillWidth: true }
-                    
+
                     ComboBox {
                         id: modeSelection
                         Layout.preferredWidth: 160
                         Layout.preferredHeight: 36
-                        
-                        model: [ 
-                            Translation.tr("Timer"), 
+
+                        model: [
+                            Translation.tr("Timer"),
                             Translation.tr("Indefinite"),
-                            Translation.tr("Until Time") 
+                            Translation.tr("Until Time")
                         ]
-                        
+
                         currentIndex: Persistent.states.idle.mode 
                         onActivated: index => {
                             Persistent.states.idle.mode = index
