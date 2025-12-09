@@ -89,7 +89,7 @@ Item {
     }
     FloatingActionButton {
         id: fabButton
-        anchors.right: parent.right
+        anchors.right: parent.left
         anchors.bottom: parent.bottom
         anchors.rightMargin: root.fabMargins
         anchors.bottomMargin: root.fabMargins
