@@ -127,7 +127,6 @@ ContentPage {
                     onClicked: {
                         Quickshell.execDetached(`${Directories.wallpaperSwitchScriptPath}`);
                     }
-
                     mainContentComponent: Component {
                         RowLayout {
                             spacing: 10
@@ -139,20 +138,17 @@ ContentPage {
                             RowLayout {
                                 spacing: 3
                                 KeyboardKey {
-                                    key: (Config.options.cheatsheet.splitButtons ? (Config.options.cheatsheet.useMacSymbol ? '󰘴' : 'Ctrl') : (Config.options.cheatsheet.useMacSymbol ? '󰘴' : 'Ctrl') + ' ' + Config.options.cheatsheet.superKey + ' T')
+                                    key: "Ctrl"
                                 }
                                 KeyboardKey {
-                                    key: Config.options.cheatsheet.superKey
-                                    visible: Config.options.cheatsheet.splitButtons
+                                    key: Config.options.cheatsheet.superKey ?? "󰖳"
                                 }
                                 StyledText {
                                     Layout.alignment: Qt.AlignVCenter
                                     text: "+"
-                                    visible: Config.options.cheatsheet.splitButtons
                                 }
                                 KeyboardKey {
                                     key: "T"
-                                    visible: Config.options.cheatsheet.splitButtons
                                 }
                             }
                         }
