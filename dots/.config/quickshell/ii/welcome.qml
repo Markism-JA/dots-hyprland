@@ -314,20 +314,17 @@ ApplicationWindow {
                                     RowLayout {
                                         spacing: 3
                                         KeyboardKey {
-                                            key: (Config.options.cheatsheet.splitButtons ? (Config.options.cheatsheet.useMacSymbol ? '󰘴' : 'Ctrl') : (Config.options.cheatsheet.useMacSymbol ? '󰘴' : 'Ctrl') + ' ' + Config.options.cheatsheet.superKey + ' T')
+                                            key: "Ctrl"
                                         }
                                         KeyboardKey {
-                                            key: Config.options.cheatsheet.superKey
-                                            visible: Config.options.cheatsheet.splitButtons
+                                            key: "󰖳"
                                         }
                                         StyledText {
                                             Layout.alignment: Qt.AlignVCenter
                                             text: "+"
-                                            visible: Config.options.cheatsheet.splitButtons
                                         }
                                         KeyboardKey {
                                             key: "T"
-                                            visible: Config.options.cheatsheet.splitButtons
                                         }
                                     }
                                 }
@@ -410,26 +407,6 @@ ApplicationWindow {
                     icon: "info"
                     title: Translation.tr("Info")
 
-                    ContentSubsection {
-                        title: Translation.tr("Super key symbol")
-                        tooltip: Translation.tr("You can also manually edit cheatsheet.superKey")
-                        ConfigSelectionArray {
-                            currentValue: Config.options.cheatsheet.superKey
-                            onSelected: newValue => {
-                                Config.options.cheatsheet.superKey = newValue;
-                            }
-                            // Use a nerdfont to see the icons
-                            options: ([
-                              "󰖳", "", "󰨡", "", "󰌽", "󰣇", "", "", "", 
-                              "", "", "󱄛", "", "", "", "⌘", "󰀲", "󰟍", ""
-                            ]).map(icon => { return {
-                              displayName: icon,
-                              value: icon
-                              }
-                            })
-                        }
-                    }
-
                     Flow {
                         Layout.fillWidth: true
                         spacing: 5
@@ -449,18 +426,15 @@ ApplicationWindow {
                                     }
                                     RowLayout {
                                         spacing: 3
-
                                         KeyboardKey {
-                                            key: (Config.options.cheatsheet.splitButtons ? Config.options.cheatsheet.superKey  :  Config.options.cheatsheet.superKey + ' /')
+                                            key: "󰖳"
                                         }
                                         StyledText {
                                             Layout.alignment: Qt.AlignVCenter
                                             text: "+"
-                                            visible: Config.options.cheatsheet.splitButtons
                                         }
                                         KeyboardKey {
                                             key: "/"
-                                            visible: Config.options.cheatsheet.splitButtons
                                         }
                                     }
                                 }
