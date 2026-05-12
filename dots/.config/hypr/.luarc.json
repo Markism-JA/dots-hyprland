@@ -1,0 +1,14 @@
+{
+    "workspace": {
+        "library": [
+            "/usr/share/hypr/stubs",
+            "${3rd}/bin/lua/lua-language-server/meta/template"
+        ],
+        "checkThirdParty": false
+    },
+    "diagnostics": {
+        "globals": [
+            "hl"
+        ]
+    }
+}
